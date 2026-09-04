@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [ -f "$HOME/.crush_env" ]; then
+    source "$HOME/.crush_env"
+fi
+
+provider add devpass \
+  --name "DevPass" \
+  --type openai-compat \
+  --base-url "https://api.llmgateway.io/v1" \
+  --api-key "${DEVPASS_API_KEY}"
+
+model large devpass/deepseek-v4-flash
+model small devpass/deepseek-v4-flash
+
