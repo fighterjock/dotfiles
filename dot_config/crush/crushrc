@@ -13,3 +13,7 @@ provider add devpass \
 model large devpass/deepseek-v4-flash
 model small devpass/deepseek-v4-flash
 
+# Clean commits: no 💘 banner, no attribution footer
+option attribution-trailer-style none
+option attribution-generated-with false
+
