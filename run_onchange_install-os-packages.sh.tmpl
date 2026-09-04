@@ -1,0 +1,56 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Homebrew not found; install it first" >&2
+  exit 0
+fi
+
+installed="$(brew list -1 2>/dev/null || true)"
+missing=()
+for p in {{ range .packages.darwin }}"{{ . }}" {{ end }}; do
+  printf '%s\n' "$installed" | grep -qx "$p" || missing+=("$p")
+done
+
+if [ ${#missing[@]} -gt 0 ]; then
+  echo "installing via brew: ${missing[*]}"
+  brew install "${missing[@]}"
+else
+  echo "all brew packages present"
+fi
+{{ else if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+SUDO=""
+if [ "$(id -u)" -ne 0 ]; then
+  if command -v sudo >/dev/null 2>&1; then
+    SUDO="sudo"
+  else
+    echo "not root and sudo unavailable; skipping package installs" >&2
+    exit 0
+  fi
+fi
+
+if command -v apt-get >/dev/null 2>&1; then
+  PM="apt"
+  PKGS=({{ range .packages.linux.apt }}"{{ . }}" {{ end }})
+elif command -v dnf >/dev/null 2>&1; then
+  PM="dnf"
+  PKGS=({{ range .packages.linux.dnf }}"{{ . }}" {{ end }})
+elif command -v pacman >/dev/null 2>&1; then
+  PM="pacman"
+  PKGS=({{ range .packages.linux.pacman }}"{{ . }}" {{ end }})
+else
+  echo "no supported package manager found; install these manually: neovim git ripgrep fd bat" >&2
+  exit 0
+fi
+
+echo "installing via $PM: ${PKGS[*]}"
+case "$PM" in
+  apt)    $SUDO apt-get install -y "${PKGS[@]}" ;;
+  dnf)    $SUDO dnf install -y "${PKGS[@]}" ;;
+  pacman) $SUDO pacman -S --needed --noconfirm "${PKGS[@]}" ;;
+esac
+{{ end -}}

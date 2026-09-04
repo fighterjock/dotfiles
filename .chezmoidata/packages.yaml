@@ -1,0 +1,26 @@
+packages:
+  darwin:
+    - neovim
+    - git
+    - ripgrep
+    - fd
+    - bat
+  linux:
+    apt:
+      - neovim
+      - git
+      - ripgrep
+      - fd-find
+      - bat
+    dnf:
+      - neovim
+      - git
+      - ripgrep
+      - fd-find
+      - bat
+    pacman:
+      - neovim
+      - git
+      - ripgrep
+      - fd
+      - bat
