@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs starship, fzf, and the two zsh plugins via curl. macOS and Linux.
+# Installs glow, starship, fzf, and the two zsh plugins via curl. macOS and Linux.
 # Safe to re-run: skips anything already installed.
 set -euo pipefail
 
@@ -10,12 +10,32 @@ case "$OS" in
 esac
 
 case "$(uname -m)" in
-  x86_64|amd64)  FZF_ARCH=amd64 ;;
-  aarch64|arm64) FZF_ARCH=arm64 ;;
+  x86_64|amd64)  FZF_ARCH=amd64;  GLOW_ARCH=x86_64 ;;
+  aarch64|arm64) FZF_ARCH=arm64; GLOW_ARCH=arm64 ;;
   *) echo "unsupported architecture: $(uname -m)" >&2; exit 1 ;;
 esac
 
 mkdir -p "$HOME/.local/bin" "$HOME/.zsh/plugins"
+
+if [ ! -x "$HOME/.local/bin/glow" ]; then
+  echo "installing glow"
+  TAG="$(curl -fsSL https://api.github.com/repos/charmbracelet/glow/releases/latest \
+    | grep -o '"tag_name": *"[^"]*"' | head -1 | cut -d'"' -f4)"
+  VER="${TAG#v}"
+  case "$OS" in
+    darwin) GLOW_OS="Darwin" ;;
+    linux)  GLOW_OS="Linux" ;;
+  esac
+  curl -fsSL -o /tmp/glow.tar.gz \
+    "https://github.com/charmbracelet/glow/releases/download/${TAG}/glow_${VER}_${GLOW_OS}_${GLOW_ARCH}.tar.gz"
+  GLOW_TMP="$(mktemp -d)"
+  tar -xzf /tmp/glow.tar.gz -C "$GLOW_TMP"
+  cp "$GLOW_TMP"/*/glow "$HOME/.local/bin/glow"
+  chmod +x "$HOME/.local/bin/glow"
+  rm -rf "$GLOW_TMP" /tmp/glow.tar.gz
+else
+  echo "glow already installed"
+fi
 
 if [ ! -x "$HOME/.local/bin/starship" ]; then
   echo "installing starship"
@@ -59,4 +79,4 @@ install_plugin zsh-syntax-highlighting \
   "https://codeload.github.com/zsh-users/zsh-syntax-highlighting/tar.gz/refs/tags/0.8.0" \
   "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-echo "done: shell tools ready"
+echo "done: shell tools ready (glow, starship, fzf, zsh plugins)"
