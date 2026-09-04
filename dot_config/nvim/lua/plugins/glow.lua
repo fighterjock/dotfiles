@@ -2,8 +2,11 @@
 return {
   "hangarbay/glow.nvim",
   cmd = "Glow",
+  ft = "markdown",
   keys = {
     { "<leader>cg", desc = "Preview markdown in glow" },
   },
-  opts = {},
+  opts = {
+    auto_open = true,
+  },
 }
