@@ -68,7 +68,7 @@ map("n", "<leader>mb", function()
     vim.notify("No known build system found", vim.log.levels.WARN)
     return
   end
-  vim.cmd("botright split | resize 15 | terminal " .. cmd)
+  vim.cmd("botright vsplit | vertical resize " .. math.floor(vim.o.columns * 0.4) .. " | terminal " .. cmd)
 end, { desc = "Build project" })
 
 -- Run tests
@@ -87,5 +87,5 @@ map("n", "<leader>mt", function()
     vim.notify("No known test runner found", vim.log.levels.WARN)
     return
   end
-  vim.cmd("botright split | resize 15 | terminal " .. cmd)
+  vim.cmd("botright vsplit | vertical resize " .. math.floor(vim.o.columns * 0.4) .. " | terminal " .. cmd)
 end, { desc = "Run tests" })
