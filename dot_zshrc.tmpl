@@ -7,8 +7,18 @@ case ":$PATH:" in
   *) export PATH="$HOME/.local/bin:$PATH" ;;
 esac
 
-source <("$HOME/.local/bin/fzf" --zsh)
+if [ -x "$HOME/.local/bin/fzf" ]; then
+  source <("$HOME/.local/bin/fzf" --zsh)
+fi
 
-source "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+if [ -f "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
 
-source "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+if [ -x "$HOME/.local/bin/starship" ]; then
+  eval "$("$HOME/.local/bin/starship" init zsh)"
+fi
+
+if [ -f "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi

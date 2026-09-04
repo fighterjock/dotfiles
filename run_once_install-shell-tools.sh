@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs fzf and the two zsh plugins via curl only. Works on macOS and Linux.
+# Installs starship, fzf, and the two zsh plugins via curl. macOS and Linux.
 # Safe to re-run: skips anything already installed.
 set -euo pipefail
 
@@ -16,6 +16,13 @@ case "$(uname -m)" in
 esac
 
 mkdir -p "$HOME/.local/bin" "$HOME/.zsh/plugins"
+
+if [ ! -x "$HOME/.local/bin/starship" ]; then
+  echo "installing starship"
+  sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- -b "$HOME/.local/bin"
+else
+  echo "starship already installed"
+fi
 
 if [ ! -x "$HOME/.local/bin/fzf" ]; then
   TAG="$(curl -fsSL https://api.github.com/repos/junegunn/fzf/releases/latest \
@@ -52,4 +59,4 @@ install_plugin zsh-syntax-highlighting \
   "https://codeload.github.com/zsh-users/zsh-syntax-highlighting/tar.gz/refs/tags/0.8.0" \
   "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-echo "done: fzf and zsh plugins ready"
+echo "done: shell tools ready"
