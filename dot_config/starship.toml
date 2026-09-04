@@ -6,7 +6,7 @@ success_symbol = ">"
 error_symbol = ">"
 
 [username]
-show_always = true
+show_always = false
 format = "[$user]($style) "
 
 [directory]
