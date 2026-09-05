@@ -17,6 +17,7 @@ and installs to `~/.zshrc`, `dot_config/nvim/` installs to
   git branch and status, all ASCII)
 - Git: `~/.gitconfig`
 - Neovim: `~/.config/nvim/` (init.lua, lua/ modules, plugin lockfile)
+- Tmux: `~/.config/tmux/tmux.conf` (vi keys, mouse, no plugin manager)
 - Crush: `~/.config/crush/crushrc`
 - Claude skills: `~/.claude/skills/`
 

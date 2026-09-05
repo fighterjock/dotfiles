@@ -43,7 +43,7 @@ elif command -v pacman >/dev/null 2>&1; then
   PM="pacman"
   PKGS=({{ range .packages.linux.pacman }}"{{ . }}" {{ end }})
 else
-  echo "no supported package manager found; install these manually: neovim git ripgrep fd bat" >&2
+  echo "no supported package manager found; install these manually: neovim git ripgrep fd bat tmux" >&2
   exit 0
 fi
 

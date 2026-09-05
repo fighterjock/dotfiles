@@ -5,6 +5,7 @@ packages:
     - ripgrep
     - fd
     - bat
+    - tmux
   linux:
     apt:
       - neovim
@@ -12,15 +13,18 @@ packages:
       - ripgrep
       - fd-find
       - bat
+      - tmux
     dnf:
       - neovim
       - git
       - ripgrep
       - fd-find
       - bat
+      - tmux
     pacman:
       - neovim
       - git
       - ripgrep
       - fd
       - bat
+      - tmux
