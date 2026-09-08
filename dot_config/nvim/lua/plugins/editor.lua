@@ -107,6 +107,9 @@ return {
         lualine_x = {
           {
             function()
+              if vim.g.crush_status == "working" then
+                return "✻ crush"
+              end
               if vim.g.crush_unread then
                 return "* crush"
               end
