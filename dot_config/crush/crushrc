@@ -27,7 +27,7 @@ GW_SESSION="${LLM_GATEWAY_SESSION_TOKEN:-}"
 CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/devpass-usage"
 [ "$(uname)" = Darwin ] && CACHE="$HOME/Library/Caches/devpass-usage"
 mcp add devpass \
-  --command "$HOME/.config/crush/mcp-docker-reuse" \
+  --command "$HOME/.config/crush/docker-mcp" \
   --args devpass \
   --args hangarbay/devpass.mcp:latest \
   --args --user --args "$(id -u):$(id -g)" \
@@ -39,9 +39,60 @@ mcp add devpass \
 
 # Gemini MCP server — no API key, auto-bootstraps via headless Firefox in Docker
 mcp add gemini \
-  --command "$HOME/.config/crush/mcp-docker-reuse" \
+  --command "$HOME/.config/crush/docker-mcp" \
   --args gemini \
   --args hangarbay/gemini.mcp:latest \
   --args --shm-size --args 256m
 
+# OpenAI MCP server — ChatGPT via the free web UI, no API key or browser
+mcp add openai \
+  --command "$HOME/.config/crush/docker-mcp" \
+  --args openai \
+  --args hangarbay/openai.mcp:latest
 
+
+
+# --- kiro-provider: register a standalone daemon on the default port (8730) ---
+# Runs when you start kiro-provider yourself (curl installer / launchd). The
+# per-project autostart block below re-adds the provider on a derived port
+# when a .kiro-provider marker exists, and wins over this registration.
+if curl -s --max-time 1 http://127.0.0.1:8730/healthz >/dev/null 2>&1; then
+  provider add kiro \
+    --type openai-compat \
+    --base-url "http://127.0.0.1:8730/v1" \
+    --api-key local
+fi
+
+# --- kiro-provider: auto-start a per-project daemon when Crush launches ---
+# Enable per project:  touch .kiro-provider   (or export KIRO_AUTOSTART=1)
+# To make kiro the active model in a project, add to that project's crushrc:
+#   model large kiro/kiro-agent
+if [ -n "${KIRO_AUTOSTART:-}" ] || [ -f .kiro-provider ]; then
+  if command -v kiro-provider >/dev/null 2>&1 && command -v curl >/dev/null 2>&1; then
+    _kp_dir="$(pwd -P 2>/dev/null || pwd)"
+    _kp_sum=$(printf '%s' "$_kp_dir" | cksum | awk '{print $1}')
+    _kp_port=$(( ( _kp_sum % 300 ) + 8730 ))
+    _kp_log="/tmp/kiro-provider-${_kp_port}.log"
+    _kp_up=0
+    _kp_info=$(curl -s --max-time 1 "http://127.0.0.1:${_kp_port}/info" 2>/dev/null || true)
+    case "$_kp_info" in
+      *"\"workdir\":\"$_kp_dir\""*) _kp_up=1 ;;
+    esac
+    if [ "$_kp_up" != 1 ]; then
+      ( nohup kiro-provider --port "$_kp_port" --workdir "$_kp_dir" >"$_kp_log" 2>&1 & )
+      for _kp_i in 1 2 3 4 5 6 7 8 9 10; do
+        sleep 0.1
+        if curl -s --max-time 1 "http://127.0.0.1:${_kp_port}/healthz" >/dev/null 2>&1; then break; fi
+      done
+    fi
+    provider add kiro \
+      --type openai-compat \
+      --base-url "http://127.0.0.1:${_kp_port}/v1" \
+      --api-key local
+    unset _kp_dir _kp_sum _kp_port _kp_log _kp_up _kp_info _kp_i
+  fi
+fi
+
+# Ring the terminal bell when Crush needs permission/input or finishes its
+# turn; tmux then flags the window (yellow !) and beeps for background ones
+option notifications bell
