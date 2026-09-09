@@ -21,4 +21,10 @@ if ! command -v zsh >/dev/null 2>&1; then
 fi
 
 chezmoi init --apply "$REPO"
+
+# The nvim icon font installs via a run-once script during apply above;
+# run it again here so a fresh machine is covered even if apply is skipped.
+if [ -x "$HOME/.local/share/chezmoi/run_once_install-nerd-font.sh" ]; then
+  "$HOME/.local/share/chezmoi/run_once_install-nerd-font.sh"
+fi
 echo "done - open a new shell"
