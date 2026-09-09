@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Launch a Docker-based MCP server in a single named, reusable container.
+# Usage: docker-mcp <name> <image> [docker-create args...]
+set -euo pipefail
+
+name="${1:?usage: docker-mcp <name> <image> [docker-create args...]}"
+image="${2:?usage: docker-mcp <name> <image> [docker-create args...]}"
+shift 2
+
+# Create the container once; later launches reuse it.
+if ! docker inspect "$name" >/dev/null 2>&1; then
+  docker create --name "$name" -i "$@" "$image" >/dev/null
+fi
+
+# A previous session that was killed without a clean shutdown may have left
+# the container running; stop it so we can attach cleanly.
+docker stop "$name" >/dev/null 2>&1 || true
+
+exec docker start --attach --interactive "$name"
