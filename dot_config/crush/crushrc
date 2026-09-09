@@ -50,6 +50,13 @@ mcp add openai \
   --args openai \
   --args hangarbay/openai.mcp:latest
 
+# Fastmail MCP server — official hosted endpoint; OAuth 2.0 with dynamic
+# client registration + PKCE. First connect opens a browser consent flow.
+mcp add fastmail \
+  --type http \
+  --url "https://api.fastmail.com/mcp" \
+  --oauth true
+
 
 
 # --- kiro-provider: register a standalone daemon on the default port (8730) ---
@@ -60,7 +67,8 @@ if curl -s --max-time 1 http://127.0.0.1:8730/healthz >/dev/null 2>&1; then
   provider add kiro \
     --type openai-compat \
     --base-url "http://127.0.0.1:8730/v1" \
-    --api-key local
+    --api-key local \
+    --extra-body "{\"cwd\":\"$(pwd)\"}"
 fi
 
 # --- kiro-provider: auto-start a per-project daemon when Crush launches ---
@@ -79,7 +87,7 @@ if [ -n "${KIRO_AUTOSTART:-}" ] || [ -f .kiro-provider ]; then
       *"\"workdir\":\"$_kp_dir\""*) _kp_up=1 ;;
     esac
     if [ "$_kp_up" != 1 ]; then
-      ( nohup kiro-provider --port "$_kp_port" --workdir "$_kp_dir" >"$_kp_log" 2>&1 & )
+      ( nohup kiro-provider --mode cli --port "$_kp_port" --workdir "$_kp_dir" >"$_kp_log" 2>&1 & )
       for _kp_i in 1 2 3 4 5 6 7 8 9 10; do
         sleep 0.1
         if curl -s --max-time 1 "http://127.0.0.1:${_kp_port}/healthz" >/dev/null 2>&1; then break; fi
