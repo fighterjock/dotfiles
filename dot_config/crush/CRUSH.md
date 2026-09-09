@@ -24,24 +24,28 @@ brainstorming, and planning:
 
 Use them to offload research, brainstorming, and planning:
 
-- **Research-heavy questions** — ask first before digging through code or docs
-  yourself. Examples: "what's the best Go library for X", "how does OAuth2
-  PKCE work", "compare Redis vs Valkey tradeoffs".
+- **Default dispatch** — for any research or web-query task, dispatch the
+  question to BOTH `gemini_ask` and `openai_ask` up front. Do NOT start with
+  `agentic_fetch`: it takes too long. Fire both model asks first (fast, free),
+  then compare or combine their answers.
+- **`agentic_fetch` only after the models** — reach for it after Gemini and
+  OpenAI have answered, only when you want to dig deeper: exact quotes,
+  primary sources, current docs, or verifying a disputed detail.
+- **Research-heavy questions** — examples: "what's the best Go library for
+  X", "how does OAuth2 PKCE work", "compare Redis vs Valkey tradeoffs".
 - **Planning and design** — when the user asks "how would you build X" or
   "plan out Y", use either model to generate an initial plan or architecture,
   then refine it based on what you find in the codebase.
 - **Summarization** — if you need to understand a concept or technology you're
   unfamiliar with, ask for a concise explanation instead of reading lengthy
   docs.
-- **Cross-check when it matters** — for correctness-critical or opinionated
-  answers, ask both models and compare; divergent answers usually mean the
-  question needs verification against primary sources. Use the two models'
+- **Cross-check when it matters** — divergent answers between the two models
+  usually mean the question needs verification against primary sources; that
+  is the case where `agentic_fetch` earns its keep. Use the two models'
   different training/priorities as a sanity check (e.g. Gemini for
   Google-ecosystem topics, ChatGPT for OpenAI/ecosystem topics).
 - Both are free with no rate limits (web UIs). Prefer them over web searches
   for conceptual questions, comparisons, and planning tasks.
-- Use one (or both) early in a task to get oriented, then verify details
-  against the actual codebase or docs.
 
 Caveat: the anonymous ChatGPT flow can throttle under heavy use; if
 `openai_ask` starts failing, fall back to `gemini_ask`.
