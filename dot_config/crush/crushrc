@@ -4,11 +4,9 @@ if [ -f "$HOME/.crush_env" ]; then
     source "$HOME/.crush_env"
 fi
 
-provider add devpass \
-  --name "DevPass" \
-  --type openai-compat \
-  --base-url "https://api.llmgateway.io/v1" \
-  --api-key "${DEVPASS_API_KEY}"
+# DevPass provider, live model pricing (fetched from the gateway catalog), and
+# large/small defaults live in their own file so other configs can source it.
+source "$HOME/.config/crush/devpass.sh"
 
 model large devpass/deepseek-v4-flash
 model small devpass/deepseek-v4-flash
