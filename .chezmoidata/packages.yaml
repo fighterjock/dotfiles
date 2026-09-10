@@ -6,6 +6,7 @@ packages:
     - fd
     - bat
     - tmux
+    - go
   linux:
     apt:
       - neovim
@@ -14,6 +15,7 @@ packages:
       - fd-find
       - bat
       - tmux
+      - golang-go
     dnf:
       - neovim
       - git
@@ -21,6 +23,7 @@ packages:
       - fd-find
       - bat
       - tmux
+      - golang
     pacman:
       - neovim
       - git
@@ -28,3 +31,4 @@ packages:
       - fd
       - bat
       - tmux
+      - go

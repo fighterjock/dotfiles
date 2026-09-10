@@ -43,7 +43,7 @@ elif command -v pacman >/dev/null 2>&1; then
   PM="pacman"
   PKGS=({{ range .packages.linux.pacman }}"{{ . }}" {{ end }})
 else
-  echo "no supported package manager found; install these manually: neovim git ripgrep fd bat tmux" >&2
+  echo "no supported package manager found; install these manually: neovim git ripgrep fd bat tmux go" >&2
   exit 0
 fi
 
@@ -54,3 +54,7 @@ case "$PM" in
   pacman) $SUDO pacman -S --needed --noconfirm "${PKGS[@]}" ;;
 esac
 {{ end -}}
+if command -v go >/dev/null 2>&1 && [ ! -x "$HOME/go/bin/gopls" ]; then
+  echo "installing gopls"
+  go install golang.org/x/tools/gopls@latest
+fi
