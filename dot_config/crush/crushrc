@@ -23,7 +23,7 @@ option attribution-generated-with false
 source "$HOME/.config/crush/mcp/devpass.sh"
 source "$HOME/.config/crush/mcp/parley.sh"
 
-lsp add go --command "$HOME/go/bin/gopls" --filetypes go --root-markers go.mod
+lsp add gopls --command "$HOME/go/bin/gopls" --filetypes go --filetypes gomod --filetypes gowork --filetypes gotmpl --root-markers go.work --root-markers go.mod --root-markers .git
 
 # Ring the terminal bell when Crush needs permission/input or finishes its
 # turn; tmux then flags the window (yellow !) and beeps for background ones
