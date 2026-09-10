@@ -21,8 +21,7 @@ option attribution-generated-with false
 # sourcing. Source the ones you want everywhere here; a project's .crushrc can
 # source a different subset (and wins on conflicts).
 source "$HOME/.config/crush/mcp/devpass.sh"
-source "$HOME/.config/crush/mcp/gemini.sh"
-source "$HOME/.config/crush/mcp/openai.sh"
+source "$HOME/.config/crush/mcp/parley.sh"
 
 # Ring the terminal bell when Crush needs permission/input or finishes its
 # turn; tmux then flags the window (yellow !) and beeps for background ones
