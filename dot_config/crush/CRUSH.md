@@ -14,41 +14,61 @@
 - Skipping the todo list is allowed only for trivial single-step tasks
   (one file, one edit, or pure Q&A). When in doubt, make the list.
 
-## Gemini + OpenAI MCP for research and planning
+## Parley MCP: which tool to invoke
 
-You have access to two free web-UI MCP tools for offloading research,
-brainstorming, and planning:
+The parley server exposes external AIs (Gemini and ChatGPT) as tools with no
+API keys, over their free web UIs. Every tool takes a `provider` argument
+(`both` by default); `both` fans out concurrently, labels each answer, and
+still returns the other provider when one fails.
 
-- `gemini_ask` — Google Gemini (AI Mode)
-- `openai_ask` — OpenAI ChatGPT (anonymous web flow)
+Pick the tool from the state of the task, not from what sounds closest:
 
-Use them to offload research, brainstorming, and planning:
+- **`review`** — you have an artifact to judge: a diff, a plan, a code change.
+  Returns APPROVE / REQUEST_CHANGES / NEEDS_DISCUSSION with findings. Run this
+  on every non-trivial change (see the self-review section below).
+- **`diagnose`** — something is failing and the cause is uncertain. Pass the
+  problem, the observations or logs, and the fixes already tried; it returns
+  ranked competing causes and the tests that tell them apart. It needs
+  evidence: with no evidence, use `ask` instead.
+- **`decide`** — you must pick exactly one option from a finite set that is
+  already enumerated, against stated criteria. If the options are not yet
+  known, use `ask` to explore them first.
+- **`plan`** — you know what to accomplish but need an ordered breakdown:
+  phases, deliverables, risks, open questions.
+- **`ask`** — the fallback: research, explanations, comparisons, brainstorming,
+  or any external judgment no specialized tool above covers.
 
-- **Default dispatch** — for any research or web-query task, dispatch the
-  question to BOTH `gemini_ask` and `openai_ask` up front. Do NOT start with
-  `agentic_fetch`: it takes too long. Fire both model asks first (fast, free),
-  then compare or combine their answers.
-- **`agentic_fetch` only after the models** — reach for it after Gemini and
-  OpenAI have answered, only when you want to dig deeper: exact quotes,
-  primary sources, current docs, or verifying a disputed detail.
-- **Research-heavy questions** — examples: "what's the best Go library for
-  X", "how does OAuth2 PKCE work", "compare Redis vs Valkey tradeoffs".
-- **Planning and design** — when the user asks "how would you build X" or
-  "plan out Y", use either model to generate an initial plan or architecture,
-  then refine it based on what you find in the codebase.
-- **Summarization** — if you need to understand a concept or technology you're
-  unfamiliar with, ask for a concise explanation instead of reading lengthy
-  docs.
-- **Cross-check when it matters** — divergent answers between the two models
-  usually mean the question needs verification against primary sources; that
-  is the case where `agentic_fetch` earns its keep. Use the two models'
-  different training/priorities as a sanity check (e.g. Gemini for
-  Google-ecosystem topics, ChatGPT for OpenAI/ecosystem topics).
-- Both are free with no rate limits (web UIs). Prefer them over web searches
-  for conceptual questions, comparisons, and planning tasks.
+There is deliberately no tool for specs, summaries, explanations, or
+translations; a good `ask` prompt covers those. Do not treat `ask` as the
+default to reach for first, and do not reach for a specialized tool when its
+precondition is not met.
 
-Caveat: the anonymous ChatGPT flow can throttle under heavy use; if
-`openai_ask` starts failing, fall back to `gemini_ask`.
+## Parley MCP: how to dispatch
+
+- **Both providers by default** — for any research or web-query task, dispatch
+  to both up front. Do NOT start with `agentic_fetch`: it takes too long. Fire
+  the model asks first (fast, free), then compare or combine their answers.
+- **`agentic_fetch` only after the models** — reach for it when the providers
+  diverge or you need primary sources: exact quotes, current docs, or verifying
+  a disputed detail. Divergence usually means the answer needs verification.
+- **Sanity-check across providers** — Gemini tends to be stronger on
+  Google-ecosystem topics, ChatGPT on OpenAI-ecosystem topics.
+- **Prefer parley over web searches** for conceptual questions, comparisons,
+  and planning tasks.
+- **Fallback** — the anonymous ChatGPT flow can throttle under heavy use; if it
+  starts failing, pass `provider: gemini` so the call still returns.
+
+## Self-review every code change with the review tool
+
+- After implementing a code change and before reporting it done, send the diff
+  to the parley `review` tool (both providers by default) and read the verdict.
+- Treat the review as advice, not authority: verify every blocking finding
+  against the codebase before acting on it. Reviewers hallucinate; if a finding
+  contradicts a passing build, a passing test, or the existing code, the
+  finding is wrong. Never apply a fix you have not confirmed is real.
+- Act on real findings, fix, and re-run the tests. Then report what the review
+  caught and what you rejected, with the evidence for the rejection.
+- Skip only for trivial edits (comments, docs wording, formatting).
 
 ## Git branch naming
 
