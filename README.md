@@ -19,10 +19,9 @@ and installs to `~/.zshrc`, `dot_config/nvim/` installs to
 - Neovim: `~/.config/nvim/` (init.lua, lua/ modules, plugin lockfile)
 - Tmux: `~/.config/tmux/tmux.conf` (vi keys, mouse, no plugin manager)
 - Crush: `~/.config/crush/crushrc`
-- Claude skills: `~/.claude/skills/`
 
 Not tracked here: `~/.crush_env` (API keys, loaded by `crushrc`) and anything
-else in `~/.claude` outside `skills/`.
+in `~/.claude`.
 
 `README.md` and `bootstrap.sh` are ignored by `.chezmoiignore` and stay in the
 repo only.
