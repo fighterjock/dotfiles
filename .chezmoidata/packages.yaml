@@ -7,6 +7,7 @@ packages:
     - bat
     - tmux
     - go
+    - caddy
   linux:
     apt:
       - neovim
@@ -16,6 +17,7 @@ packages:
       - bat
       - tmux
       - golang-go
+      - caddy
     dnf:
       - neovim
       - git
@@ -24,6 +26,7 @@ packages:
       - bat
       - tmux
       - golang
+      - caddy
     pacman:
       - neovim
       - git
@@ -32,3 +35,4 @@ packages:
       - bat
       - tmux
       - go
+      - caddy

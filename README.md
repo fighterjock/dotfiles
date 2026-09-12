@@ -19,6 +19,10 @@ and installs to `~/.zshrc`, `dot_config/nvim/` installs to
 - Neovim: `~/.config/nvim/` (init.lua, lua/ modules, plugin lockfile)
 - Tmux: `~/.config/tmux/tmux.conf` (vi keys, mouse, no plugin manager)
 - Crush: `~/.config/crush/crushrc`
+- Caddy: `caddy/Caddyfile` is the single L7 router in front of Tailscale
+  serve. The brew service reads it from `/opt/homebrew/etc/Caddyfile`, which
+  `run_onchange_link-caddy-config.sh` symlinks to the managed copy so the live
+  and source configs never diverge.
 
 Not tracked here: `~/.crush_env` (API keys, loaded by `crushrc`) and anything
 in `~/.claude`.

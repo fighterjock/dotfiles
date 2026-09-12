@@ -1,0 +1,45 @@
+# Caddy as the single L7 router ahead of Tailscale "serve".
+#
+# Tailscale "serve" terminates HTTPS for the tailnet and forwards to Caddy on
+# 127.0.0.1:8080. Caddy dispatches to every backend service (multiple
+# crushdecks and other servers) using HTTP Host-header + path rules, so you get
+# ONE tailnet entry point fanning out to N backends.
+#
+# crushdeck's embedded frontend uses RELATIVE asset/API paths (static/...,
+# api/...), so each instance works untouched under its own path prefix.
+#
+# Bind only to loopback: Tailscale serve is the only network-facing entry.
+:8080 {
+	# ---- crushdeck instance A (127.0.0.1:4443) under /cd-a/ ----
+	handle_path /cd-a/* {
+		reverse_proxy 127.0.0.1:4443
+	}
+	handle_path /cd-a {
+		reverse_proxy 127.0.0.1:4443
+	}
+
+	# ---- crushdeck instance B (127.0.0.1:4444) under /cd-b/ ----
+	handle_path /cd-b/* {
+		reverse_proxy 127.0.0.1:4444
+	}
+	handle_path /cd-b {
+		reverse_proxy 127.0.0.1:4444
+	}
+
+	# ---- any other server, e.g. Grafana under /grafana/ ----
+	handle_path /grafana/* {
+		reverse_proxy 127.0.0.1:3000
+	}
+	handle_path /grafana {
+		reverse_proxy 127.0.0.1:3000
+	}
+
+	# ---- root only: landing page listing available sub-routes ----
+	# Scope the site to the root path so proxied prefixes above are untouched,
+	# and never rewrite proxied paths to index.html.
+	handle / {
+		root * /Users/rudreshamin/workspace/hangarbay/crushdeck/caddy/site
+		try_files {path} /index.html
+		file_server
+	}
+}
