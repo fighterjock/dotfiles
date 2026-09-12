@@ -11,27 +11,11 @@
 # Bind only to loopback: Tailscale serve is the only network-facing entry.
 :8080 {
 	# ---- crushdeck instance A (127.0.0.1:4443) under /cd-a/ ----
-	handle_path /cd-a/* {
+	handle_path /crushdeck/* {
 		reverse_proxy 127.0.0.1:4443
 	}
-	handle_path /cd-a {
+	handle_path /crushdeck {
 		reverse_proxy 127.0.0.1:4443
-	}
-
-	# ---- crushdeck instance B (127.0.0.1:4444) under /cd-b/ ----
-	handle_path /cd-b/* {
-		reverse_proxy 127.0.0.1:4444
-	}
-	handle_path /cd-b {
-		reverse_proxy 127.0.0.1:4444
-	}
-
-	# ---- any other server, e.g. Grafana under /grafana/ ----
-	handle_path /grafana/* {
-		reverse_proxy 127.0.0.1:3000
-	}
-	handle_path /grafana {
-		reverse_proxy 127.0.0.1:3000
 	}
 
 	# ---- root only: landing page listing available sub-routes ----
