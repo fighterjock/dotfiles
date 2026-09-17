@@ -32,7 +32,9 @@ Pick the tool from the state of the task, not from what sounds closest:
   evidence: with no evidence, use `ask` instead.
 - **`decide`** — you must pick exactly one option from a finite set that is
   already enumerated, against stated criteria. If the options are not yet
-  known, use `ask` to explore them first.
+  known, use `ask` to explore them first. If the decision is really a bounded
+  judgment over content you already hold, prefer jev `classify` (see the Jev
+  section below): it returns probabilities instead of prose.
 - **`plan`** — you know what to accomplish but need an ordered breakdown:
   phases, deliverables, risks, open questions.
 - **`ask`** — the fallback: research, explanations, comparisons, brainstorming,
@@ -57,6 +59,68 @@ precondition is not met.
   and planning tasks.
 - **Fallback** — the anonymous ChatGPT flow can throttle under heavy use; if it
   starts failing, pass `provider: gemini` so the call still returns.
+- **Jev before parley when the answer is a judgment, not prose** — routing,
+  labeling, yes/no gates, severity ratings, and similar bounded calls are
+  cheaper and more reliable from jev, and its probabilities compose in code.
+  Reach for parley when you need text back: an explanation, a comparison, or a
+  review of an artifact.
+
+## Jev MCP: typed judgments instead of prose
+
+The jev server wraps TypeSafe's System One model (Jev) as tools that return
+structured answers instead of explanation text: the chosen option with a
+probability for every option, a graded score with its distribution, or the
+probability that a condition holds — plus a confidence value for the ones that
+offer a choice. Code still owns the workflow; jev supplies the semantic
+judgment. `state` takes a plain string, or an object/array when the state has
+several parts, and `model` defaults to `jev-latest`. The `models` tool lists the
+aliases this account can call.
+
+Rely on jev during a task when the step is a bounded judgment over state you
+already hold, and pick the tool by what the answer means:
+
+- **`classify`** — choose one of a closed set you define, passed as `options`
+  (an array of `{name, description}`, where `description` says when the option
+  applies): routing, labeling, moderation, which handler/team/module this
+  belongs to. Returns the winning name, the full probability distribution, and
+  confidence.
+- **`score`** — rate against an ordered rubric passed as `levels` (an array of
+  descriptive levels, lowest first): relevance, severity, quality, priority.
+  Returns a probability-weighted score that can land between levels, the
+  per-level probabilities, and confidence. Prefer several atomic scores
+  combined with weights in code over one vague scale.
+- **`check`** — the probability that a yes/no condition holds (0 to 1), with
+  optional `true`/`false` strings describing what each answer means: guardrails,
+  screening, flagging, membership tests. Threshold it in code rather than
+  reading it as a label.
+- **`ask`** — many typed questions about one state in a single call, keyed by
+  the ids you supply, each `{type: noul|choice|score, instructions, criteria}`
+  (`criteria` carries the choice options, the score levels, or the `true`/`false`
+  descriptions). Independent questions are evaluated in parallel and cannot see
+  each other, so batch everything you might need, including speculative
+  questions whose premise you state explicitly.
+
+Rules that keep it useful:
+
+- Put the judgment in `instructions`, the possible answers in
+  `options`/`levels`, and the evidence in `state`. JSON objects and arrays are
+  sent as structured state, so prefer named fields and reference them by path
+  (for example `ticket.messages[0].text`).
+- Ask one narrow, coherent judgment per question; split independent dimensions
+  but keep the relationship being judged intact. A second call is only
+  warranted when an earlier answer is needed to build state or choose options.
+- Keep thresholds, weights, and the resulting actions in code, chosen per
+  consequence. Confidence describes how concentrated the distribution is, not
+  whether the workflow is right; a `check` near 0.5 means yes and no are about
+  equally likely, not "medium intensity". Escalate on low confidence for
+  consequential branches, and ignore uncertainty on branches you never use.
+- `jev-latest` moves under you: pin a versioned id from `models` once thresholds
+  have been tuned against it, and re-check them when you change models.
+- Before designing a new workflow, read the live docs
+  (https://docs.typesafe.ai/llms.txt) and the closest cookbook; they often show
+  a better decomposition than a generic classifier.
+- Keep the key in `~/.crush_env` (never in a tracked file); it is baked into the
+  container at create time, so run `docker rm jev` after rotating it.
 
 ## Self-review every code change with the review tool
 

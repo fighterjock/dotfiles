@@ -20,6 +20,9 @@ option attribution-generated-with false
 # source a different subset (and wins on conflicts).
 source "$HOME/.config/crush/mcp/devpass.sh"
 source "$HOME/.config/crush/mcp/parley.sh"
+# Typed judgments (classify/score/check/ask) via TypeSafe's Jev; requires
+# TYPESAFE_API_KEY in ~/.crush_env, otherwise the file skips registration.
+source "$HOME/.config/crush/mcp/jev.sh"
 
 # Language servers are per-project: define gopls (or others) in each project's
 # .crushrc so they only load where they apply.
