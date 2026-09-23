@@ -27,6 +27,11 @@ source "$HOME/.config/crush/mcp/jev.sh"
 # Language servers are per-project: define gopls (or others) in each project's
 # .crushrc so they only load where they apply.
 
+# Nudge the agent to jev-check its diff at the moment it edits code, so the
+# "Use jev while coding" rule in CRUSH.md fires even when the model forgets.
+# Top-level agent only; sub-agent edits are not intercepted.
+hook add PreToolUse --matcher '^(edit|multiedit|write|lsp_replace_symbol|lsp_rename)$' --name jev-edit-reminder --command "$HOME/.config/crush/jev-reminder" --timeout 5
+
 # Ring the terminal bell when Crush needs permission/input or finishes its
 # turn; tmux then flags the window (yellow !) and beeps for background ones
 option notifications bell

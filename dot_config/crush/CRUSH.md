@@ -122,10 +122,40 @@ Rules that keep it useful:
 - Keep the key in `~/.crush_env` (never in a tracked file); it is baked into the
   container at create time, so run `docker rm jev` after rotating it.
 
+## Use jev while coding, not only when building AI features
+
+Everything above frames jev as application infrastructure; it also pays off on
+your own steps. Fire it, seconds per call, at these recurring moments of every
+coding session:
+
+- **You just finished a code change** (any size, even one line) — one `check`
+  over the diff: instructions "does this diff introduce a real bug?", `true` =
+  "at least one defect a careful reader would catch", `false` = "no defect
+  found". If probability_yes > 0.3, reread the flagged code before continuing.
+- **You must pick between 2-4 concrete alternatives** (a library, where to put
+  a helper, error strategy, naming) — `classify` with one `description` per
+  option; take the top option unless a codebase constraint overrides, and say
+  its probability when you justify the pick.
+- **You are about to assert something** ("this refactor is
+  behavior-preserving", "this stays within the requested scope", "this warning
+  is a false positive") — `check` it, with `true`/`false` strings saying what
+  each outcome means.
+- **Several warnings, failures, or candidate fixes compete** — one `ask` with
+  a `score` question per item (severity or priority), then work through them
+  in probability order.
+
+jev judges, it does not explain: `check`/`score` never tell you *what* is
+wrong. When confidence is low or you need the what, read the code or escalate
+to parley `review`.
+
 ## Self-review every code change with the review tool
 
-- After implementing a code change and before reporting it done, send the diff
-  to the parley `review` tool (both providers by default) and read the verdict.
+- After implementing a code change and before reporting it done, run the jev
+  `check` from the section above on the diff, then send the diff to the parley
+  `review` tool (both providers by default) and read the verdict. Skipping
+  parley is allowed only when the change is a single small fix and the jev
+  check came back with probability_yes of 0.3 or below; the jev check itself
+  is never skippable.
 - Treat the review as advice, not authority: verify every blocking finding
   against the codebase before acting on it. Reviewers hallucinate; if a finding
   contradicts a passing build, a passing test, or the existing code, the
