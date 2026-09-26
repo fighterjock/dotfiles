@@ -5,9 +5,7 @@ packages:
     - ripgrep
     - fd
     - bat
-    - tmux
     - go
-    - caddy
   linux:
     apt:
       - neovim
@@ -15,24 +13,18 @@ packages:
       - ripgrep
       - fd-find
       - bat
-      - tmux
       - golang-go
-      - caddy
     dnf:
       - neovim
       - git
       - ripgrep
       - fd-find
       - bat
-      - tmux
       - golang
-      - caddy
     pacman:
       - neovim
       - git
       - ripgrep
       - fd
       - bat
-      - tmux
       - go
-      - caddy

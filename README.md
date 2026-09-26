@@ -17,12 +17,7 @@ and installs to `~/.zshrc`, `dot_config/nvim/` installs to
   git branch and status, all ASCII)
 - Git: `~/.gitconfig`
 - Neovim: `~/.config/nvim/` (init.lua, lua/ modules, plugin lockfile)
-- Tmux: `~/.config/tmux/tmux.conf` (vi keys, mouse, no plugin manager)
 - Crush: `~/.config/crush/crushrc`
-- Caddy: `caddy/Caddyfile` is the single L7 router in front of Tailscale
-  serve. The brew service reads it from `/opt/homebrew/etc/Caddyfile`, which
-  `run_onchange_link-caddy-config.sh` symlinks to the managed copy so the live
-  and source configs never diverge.
 
 Not tracked here: `~/.crush_env` (API keys, loaded by `crushrc`) and anything
 in `~/.claude`.
@@ -38,6 +33,8 @@ installs, via curl only (no package manager):
 - starship (prompt)
 - fzf (ctrl-R history, ctrl-T files)
 - zsh-autosuggestions and zsh-syntax-highlighting into `~/.zsh/plugins/`
+- Herdr via its curl installer, plus herdr-hunk-diff, herdr-sessionizer,
+  herdr-reviewr, and herdr-plus plugins
 
 `.zshrc` loads each of these only if present, so a partial install never
 breaks the shell.

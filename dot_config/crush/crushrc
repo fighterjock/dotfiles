@@ -1,37 +1,8 @@
 #!/usr/bin/env bash
 
-if [ -f "$HOME/.crush_env" ]; then
-    source "$HOME/.crush_env"
-fi
-
-# DevPass provider, live model pricing (fetched from the gateway catalog), and
-# large/small defaults live in their own file so other configs can source it.
-source "$HOME/.config/crush/devpass.sh"
-
-model large devpass/deepseek-v4-flash
-model small devpass/deepseek-v4-flash
-
 # Clean commits: no 💘 banner, no attribution footer
 option attribution-trailer-style none
 option attribution-generated-with false
 
-# MCP servers are defined one-per-file in ~/.config/crush/mcp/, enabled by
-# sourcing. Source the ones you want everywhere here; a project's .crushrc can
-# source a different subset (and wins on conflicts).
-source "$HOME/.config/crush/mcp/devpass.sh"
-source "$HOME/.config/crush/mcp/parley.sh"
-# Typed judgments (classify/score/check/ask) via TypeSafe's Jev; requires
-# TYPESAFE_API_KEY in ~/.crush_env, otherwise the file skips registration.
-source "$HOME/.config/crush/mcp/jev.sh"
-
 # Language servers are per-project: define gopls (or others) in each project's
 # .crushrc so they only load where they apply.
-
-# Nudge the agent to jev-check its diff at the moment it edits code, so the
-# "Use jev while coding" rule in CRUSH.md fires even when the model forgets.
-# Top-level agent only; sub-agent edits are not intercepted.
-hook add PreToolUse --matcher '^(edit|multiedit|write|lsp_replace_symbol|lsp_rename)$' --name jev-edit-reminder --command "$HOME/.config/crush/jev-reminder" --timeout 5
-
-# Ring the terminal bell when Crush needs permission/input or finishes its
-# turn; tmux then flags the window (yellow !) and beeps for background ones
-option notifications bell

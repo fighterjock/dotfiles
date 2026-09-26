@@ -79,4 +79,19 @@ install_plugin zsh-syntax-highlighting \
   "https://codeload.github.com/zsh-users/zsh-syntax-highlighting/tar.gz/refs/tags/0.8.0" \
   "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-echo "done: shell tools ready (glow, starship, fzf, zsh plugins)"
+if ! command -v herdr >/dev/null 2>&1; then
+  echo "installing herdr"
+  curl -fsSL https://herdr.dev/install.sh | sh
+else
+  echo "herdr already installed"
+fi
+
+if command -v herdr >/dev/null 2>&1; then
+  herdr plugin install jhochenbaum/herdr-hunk-diff --yes
+  herdr plugin install andrewchng/herdr-sessionizer --yes
+  herdr plugin config-dir sessionizer
+  herdr plugin install persiyanov/herdr-reviewr --yes
+  herdr plugin install cloudmanic/herdr-plus --yes
+fi
+
+echo "done: shell tools ready (glow, starship, fzf, zsh plugins, herdr)"

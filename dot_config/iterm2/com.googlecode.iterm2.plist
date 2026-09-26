@@ -4,16 +4,6 @@
 <dict>
 	<key>AllowClipboardAccess</key>
 	<true/>
-	<key>AppleAntiAliasingThreshold</key>
-	<integer>1</integer>
-	<key>ApplePressAndHoldEnabled</key>
-	<false/>
-	<key>AppleScrollAnimationEnabled</key>
-	<integer>0</integer>
-	<key>AppleSmoothFixedFontsSizeThreshold</key>
-	<integer>1</integer>
-	<key>AppleWindowTabbingMode</key>
-	<string>manual</string>
 	<key>Default Bookmark Guid</key>
 	<string>9D30F9D2-CABB-425A-BA75-CCE4DF7D4941</string>
 	<key>Default Browser Profile Guid</key>
@@ -26,97 +16,6 @@
 			<integer>39</integer>
 			<key>Text</key>
 			<string></string>
-		</dict>
-		<key>0x31-0x100000-0x12</key>
-		<dict>
-			<key>Action</key>
-			<integer>11</integer>
-			<key>Apply Mode</key>
-			<integer>0</integer>
-			<key>Escaping</key>
-			<integer>2</integer>
-			<key>Text</key>
-			<string>0x01 0x31</string>
-			<key>Version</key>
-			<integer>2</integer>
-		</dict>
-		<key>0x32-0x100000-0x13</key>
-		<dict>
-			<key>Action</key>
-			<integer>11</integer>
-			<key>Apply Mode</key>
-			<integer>0</integer>
-			<key>Escaping</key>
-			<integer>2</integer>
-			<key>Text</key>
-			<string>0x01 0x32</string>
-			<key>Version</key>
-			<integer>2</integer>
-		</dict>
-		<key>0x33-0x100000-0x14</key>
-		<dict>
-			<key>Action</key>
-			<integer>11</integer>
-			<key>Apply Mode</key>
-			<integer>0</integer>
-			<key>Escaping</key>
-			<integer>2</integer>
-			<key>Text</key>
-			<string>0x01 0x33</string>
-			<key>Version</key>
-			<integer>2</integer>
-		</dict>
-		<key>0x34-0x100000-0x15</key>
-		<dict>
-			<key>Action</key>
-			<integer>11</integer>
-			<key>Apply Mode</key>
-			<integer>0</integer>
-			<key>Escaping</key>
-			<integer>2</integer>
-			<key>Text</key>
-			<string>0x01 0x34</string>
-			<key>Version</key>
-			<integer>2</integer>
-		</dict>
-		<key>0x35-0x100000-0x17</key>
-		<dict>
-			<key>Action</key>
-			<integer>11</integer>
-			<key>Apply Mode</key>
-			<integer>0</integer>
-			<key>Escaping</key>
-			<integer>2</integer>
-			<key>Text</key>
-			<string>0x01 0x35</string>
-			<key>Version</key>
-			<integer>2</integer>
-		</dict>
-		<key>0x6e-0x100000-0x25</key>
-		<dict>
-			<key>Action</key>
-			<integer>11</integer>
-			<key>Apply Mode</key>
-			<integer>0</integer>
-			<key>Escaping</key>
-			<integer>2</integer>
-			<key>Text</key>
-			<string>0x01 0x0e</string>
-			<key>Version</key>
-			<integer>2</integer>
-		</dict>
-		<key>0x74-0x100000-0x28</key>
-		<dict>
-			<key>Action</key>
-			<integer>11</integer>
-			<key>Apply Mode</key>
-			<integer>0</integer>
-			<key>Escaping</key>
-			<integer>2</integer>
-			<key>Text</key>
-			<string>0x01 0x63</string>
-			<key>Version</key>
-			<integer>2</integer>
 		</dict>
 		<key>0x9-0x40000</key>
 		<dict>
@@ -977,7 +876,7 @@
 			<key>Columns</key>
 			<integer>80</integer>
 			<key>Command</key>
-			<string>/opt/homebrew/bin/tmux -2 a || /opt/homebrew/bin/tmux -2 </string>
+			<string>zsh -c "herdr; exec zsh"</string>
 			<key>Cursor Color</key>
 			<dict>
 				<key>Alpha Component</key>
@@ -1174,7 +1073,7 @@
 					<key>Escaping</key>
 					<integer>2</integer>
 					<key>Text</key>
-					<string>0x01 0x31</string>
+					<string>0x02 0x31</string>
 					<key>Version</key>
 					<integer>2</integer>
 				</dict>
@@ -1187,7 +1086,7 @@
 					<key>Escaping</key>
 					<integer>2</integer>
 					<key>Text</key>
-					<string>0x01 0x32</string>
+					<string>0x02 0x32</string>
 					<key>Version</key>
 					<integer>2</integer>
 				</dict>
@@ -1200,7 +1099,7 @@
 					<key>Escaping</key>
 					<integer>2</integer>
 					<key>Text</key>
-					<string>0x01 0x33</string>
+					<string>0x02 0x33</string>
 					<key>Version</key>
 					<integer>2</integer>
 				</dict>
@@ -1213,7 +1112,7 @@
 					<key>Escaping</key>
 					<integer>2</integer>
 					<key>Text</key>
-					<string>0x01 0x34</string>
+					<string>0x02 0x34</string>
 					<key>Version</key>
 					<integer>2</integer>
 				</dict>
@@ -1226,7 +1125,33 @@
 					<key>Escaping</key>
 					<integer>2</integer>
 					<key>Text</key>
-					<string>0x01 0x35</string>
+					<string>0x02 0x35</string>
+					<key>Version</key>
+					<integer>2</integer>
+				</dict>
+				<key>0x6e-0x100000-0x25</key>
+				<dict>
+					<key>Action</key>
+					<integer>11</integer>
+					<key>Apply Mode</key>
+					<integer>0</integer>
+					<key>Escaping</key>
+					<integer>2</integer>
+					<key>Text</key>
+					<string>0x02 0x4e</string>
+					<key>Version</key>
+					<integer>2</integer>
+				</dict>
+				<key>0x74-0x100000-0x28</key>
+				<dict>
+					<key>Action</key>
+					<integer>11</integer>
+					<key>Apply Mode</key>
+					<integer>0</integer>
+					<key>Escaping</key>
+					<integer>2</integer>
+					<key>Text</key>
+					<string>0x02 0x63</string>
 					<key>Version</key>
 					<integer>2</integer>
 				</dict>

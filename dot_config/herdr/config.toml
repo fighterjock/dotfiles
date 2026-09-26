@@ -1,0 +1,21 @@
+onboarding = false
+[[keys.command]]
+key = "prefix+f"
+type = "plugin_action"
+command = "sessionizer.open"
+description = "Open project workspace"
+
+[[keys.command]]
+key = "prefix+w"
+type = "plugin_action"
+command = "sessionizer.worktree"
+description = "Open Git worktree workspace"
+
+[experimental]
+kitty_graphics = true
+
+[[keys.command]]
+key = "prefix+r"
+type = "plugin_action"
+command = "persiyanov.reviewr.open"
+description = "Open code review sidebar"
