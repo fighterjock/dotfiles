@@ -59,7 +59,6 @@ nvim
 
 ## Plugins
 
-- [crush.nvim](https://github.com/hangarbay/crush.nvim) -- Crush AI integration
 - [lazy.nvim](https://github.com/folke/lazy.nvim) -- Plugin manager
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) -- Fuzzy finder
 - [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) -- File tree
